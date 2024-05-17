@@ -48,20 +48,16 @@ const AñadirDatos = (req, res) => {
 
       for (const [dia, horas] of Object.entries(HoraApertura)) {
         const diaSemanaId = diasSemanaMap[dia];
-
+        
         for (const [_, horasArray] of Object.entries(horas)) {
           const [horaApertura, horaCierre] = horasArray;
           const horarioPromise = new Promise((resolve, reject) => {
-            connection.query(
-              InsertarHorario,
-              [horaApertura, horaCierre, complejoId, diaSemanaId],
-              (err) => {
-                if (err) {
-                  return reject(err);
-                }
-                resolve();
+            connection.query(InsertarHorario, [horaApertura, horaCierre, complejoId, diaSemanaId], (err) => {
+              if (err) {
+                return reject(err);
               }
-            );
+              resolve();
+            });
           });
           horarioPromises.push(horarioPromise);
         }

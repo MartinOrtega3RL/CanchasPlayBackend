@@ -25,9 +25,9 @@ const ModificarHorarioComplejo = (req, res) => {
     const { HoraApertura, idComplejo } = req.body;
   
     // Consulta para eliminar los horarios existentes del complejo
-    const EliminarHorarios = `DELETE FROM horarios WHERE Complejo_id_Complejo = ${idComplejo}`;
+    const EliminarHorarios = `DELETE FROM horarios_complejo WHERE Complejo_id_Complejo = ${idComplejo}`;
     // Consulta para insertar los nuevos horarios
-    const InsertarHorario = `INSERT INTO horarios (hora_apertura, hora_cierre, Complejo_id_Complejo, Dias_Semana_id_Dias_Semana) VALUES (?, ?, ?, ?)`;
+    const InsertarHorario = `INSERT INTO horarios_complejo (hora_apertura, hora_cierre, Complejo_id_Complejo, Dias_Semana_id_Dias_Semana) VALUES (?, ?, ?, ?)`;
   
     const diasSemanaMap = {
       Lunes: 1,

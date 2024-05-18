@@ -1,4 +1,4 @@
-const connection = require("../../config");
+const {connection} = require("../../config");
 
 const AñadirDatos = (req, res) => {
   //Datos que hay que añadir
@@ -21,7 +21,7 @@ const AñadirDatos = (req, res) => {
   const InsertarComplejo =
     "INSERT INTO complejo (Nombre_Complejo,Ubicacion,Estado_Complejo,Propietario_id_Propietario,Perfil_id_Perfil) Values (?,?,?,?,?)";
   const InsertarHorario =
-    "INSERT INTO Horarios (hora_Apertura, hora_Cierre,Complejo_id_Complejo,Dias_Semana_id_Dias_Semana) Values (?,?,?,?)";
+    "INSERT INTO horarios_complejo (hora_Apertura, hora_Cierre,Complejo_id_Complejo,Dias_Semana_id_Dias_Semana) Values (?,?,?,?)";
 
   connection.query(
     InsertarComplejo,

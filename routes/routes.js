@@ -13,7 +13,7 @@ router.post("/ModHorariosComplejo",ModificarHorarioComplejo);
 router.delete("/EliminarComplejo",EliminarComplejo);
 //Cancha
 router.post("/AddDatosCancha",addDatosCancha);
-router.post("/testAddHorarios",testAddHorarios);
+router.get("/testAddHorarios",testAddHorarios);
 
 
 //Reserva

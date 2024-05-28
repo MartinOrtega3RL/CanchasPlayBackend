@@ -19,8 +19,7 @@ router.get("/ObtenerDatosComplejo",obtenerDatosComplejo);
 router.post("/AddDatosCancha",addDatosCancha);
 router.post("/ObtenerDatosCancha",ObtenerDatosCancha);
 router.post("/ObtenerHorariosCancha",ObtenerHorariosCancha);
-router.post("/testAddHorarios",testAddHorarios);
-
+router.get("/testAddHorarios",testAddHorarios);
 //Reserva
 //--Horarios
 

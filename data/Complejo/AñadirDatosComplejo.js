@@ -6,6 +6,8 @@ const AñadirDatos = (req, res) => {
   //Ubicacion,Estado_Complejo(Cerrado,Abierto),Logo_Complejo
   //fk_Propietario_id_Propietario, fk_Perfil_id_Perfil
 
+  
+
   const {
     Nombre_Complejo,
     HoraApertura,
@@ -16,7 +18,7 @@ const AñadirDatos = (req, res) => {
     idPerfil,
   } = req.body;
 
-  console.log(HoraApertura);
+  console.log(req.body);
 
   const InsertarComplejo =
     "INSERT INTO complejo (Nombre_Complejo,Ubicacion,Estado_Complejo,Propietario_id_Propietario,Perfil_id_Perfil) Values (?,?,?,?,?)";

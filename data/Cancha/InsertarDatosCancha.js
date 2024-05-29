@@ -86,7 +86,7 @@ const addDatosCancha = async (req, res) => {
 
 
 const testAddHorarios = (req, res) => {
-  res.send("TEST")
+  res.send("Funciona la idea")
 };
 
 

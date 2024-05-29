@@ -27,7 +27,7 @@ const AñadirDatos = (req, res) => {
 
   connection.query(
     InsertarComplejo,
-    [Nombre_Complejo, Ubicacion, "Disponible", idPropietario, idPerfil],
+    [Nombre_Complejo, Ubicacion, "Disponible", 3, idPerfil],
     (err, response) => {
       if (err) {
         console.log(err);

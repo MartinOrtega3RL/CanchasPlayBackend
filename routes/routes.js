@@ -7,6 +7,7 @@ const { addDatosCancha, testAddHorarios } = require("../data/Cancha/InsertarDato
 const { obtenerDatosComplejo } = require("../data/Complejo/ObtenerDatosComplejo");
 const { ObtenerDatosCancha } = require("../data/Cancha/ObtenerDatosCancha");
 const { ObtenerHorariosCancha } = require("../data/Cancha/ObtenerHorariosCancha");
+const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
 
 
 //Complejo
@@ -22,6 +23,11 @@ router.post("/ObtenerHorariosCancha",ObtenerHorariosCancha);
 router.post("/testAddHorarios",testAddHorarios);
 
 //Reserva
+
+
+//Usuario Auth0
+
+router.post("AddDatosUsuario",InsertarUsuario)
 //--Horarios
 
 

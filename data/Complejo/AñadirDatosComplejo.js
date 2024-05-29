@@ -12,22 +12,27 @@ const AñadirDatos = (req, res) => {
     Nombre_Complejo,
     HoraApertura,
     Ubicacion,
-    EstadoComplejo,
+    EstadoComplejo = "Disponible",
     LogoComplejo,
-    idPropietario,
+    idPropietario = 3,
     idPerfil,
   } = req.body;
 
   console.log(req.body);
 
+   // Eliminar el prefijo Base64
+   const base64Data = LogoComplejo.replace(/^data:image\/png;base64,/, "");
+   // Convertir la cadena Base64 a un buffer binario
+   const binaryData = Buffer.from(base64Data, 'base64');
+
   const InsertarComplejo =
-    "INSERT INTO complejo (Nombre_Complejo,Ubicacion,Estado_Complejo,Propietario_id_Propietario,Perfil_id_Perfil) Values (?,?,?,?,?)";
+    "INSERT INTO complejo (Nombre_Complejo,Ubicacion,Estado_Complejo,Logo_Complejo,Propietario_id_Propietario,Perfil_id_Perfil) Values (?,?,?,?,?)";
   const InsertarHorario =
     "INSERT INTO horarios_complejo (hora_Apertura, hora_Cierre,Complejo_id_Complejo,Dias_Semana_id_Dias_Semana) Values (?,?,?,?)";
 
   connection.query(
     InsertarComplejo,
-    [Nombre_Complejo, Ubicacion, "Disponible", idPropietario, idPerfil],
+    [Nombre_Complejo, Ubicacion, EstadoComplejo,binaryData, idPropietario, idPerfil],
     (err, response) => {
       if (err) {
         console.log(err);

@@ -26,7 +26,7 @@ router.get("/testAddHorarios",testAddHorarios);
 
 //Usuario Auth0
 
-router.post("AddDatosUsuario",InsertarUsuario)
+router.post("/AddDatosUsuario",InsertarUsuario)
 //--Horarios
 
 

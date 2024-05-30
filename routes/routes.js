@@ -8,7 +8,12 @@ const { obtenerDatosComplejo } = require("../data/Complejo/ObtenerDatosComplejo"
 const { ObtenerDatosCancha } = require("../data/Cancha/ObtenerDatosCancha");
 const { ObtenerHorariosCancha } = require("../data/Cancha/ObtenerHorariosCancha");
 const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
+const { crearAcessToken } = require("../Api/MercadoPago/InsertarCuentaMp");
 
+
+//MercadoPago//
+
+router.get("/createAccessToken",crearAcessToken);
 
 //Complejo
 router.post("/AddDatosComplejo",AñadirDatos);

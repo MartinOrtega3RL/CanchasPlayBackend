@@ -1,22 +1,47 @@
 const { connection } = require("../../config");
+const axios = require("axios");
+require("dotenv").config();
 
- 
-const InsertarUsuario = (req,res) => {
+const InsertarUsuario = (req, res) => {
+  const { email, password, nombre, apellido, dni, telefono } = req.body;
 
-  const {email,password, userMetadata } = req.body;
-  
+  let data = JSON.stringify({
+    email: email,
+    user_metadata: {},
+    blocked: false,
+    email_verified: false,
+    app_metadata: {},
+    given_name: nombre,
+    family_name: apellido,
+    nickname: email,
+    picture: "https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg",
+    connection: "CanchasDB-Users",
+    password: password,
+    verify_email: true,
+  });
 
-  console.log(req.body);
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: process.env.URL_API_AUTH0,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
+    data: data,
+  };
 
-  const InsertarPersona = "INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?, ?, ?, ?)";
-  const InsertarCuenta = "INSERT INTO cuenta (Email,Contraseña,Rol) VALUES (?, ?, ?)";
-  const InsertarLocatario = "INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
-  const InsertarPropietario = "INSERT INTO  propietario  (Cuit,Cuenta_id_Cuenta) VALUES (?, ?)";
+  axios
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
+  console.log(req.body.email);
+};
 
-
-
-}
-
-
-module.exports = {InsertarUsuario};
+module.exports = { InsertarUsuario };

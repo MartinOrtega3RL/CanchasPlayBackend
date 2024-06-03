@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router)
 
-const port = 9595
+const port = 9090
 
 
 
@@ -16,5 +16,5 @@ app.get("/", (req,res) => {
 })
 
 app.listen(port, () => {
-  console.log("the server is now running on port 9090");
+  console.log(`the server is now running on port ${port}`);
 });

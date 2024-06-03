@@ -13,7 +13,7 @@ function storeTokens(codigoAutorizacion, propietarioId) {
         client_id: process.env.MP_CLIENT_ID,
         grant_type:'authorization_code',
         code: codigoAutorizacion,
-        redirect_uri: process.env.MP_REDIRECT_URI,
+        redirect_uri: `${process.env.MP_REDIRECT_URI}createAccessToken`,
     };
   
     axios.post('https://api.mercadopago.com/oauth/token', data)
@@ -27,7 +27,7 @@ function storeTokens(codigoAutorizacion, propietarioId) {
         
         // Consulta SQL para insertar los datos en la tabla cuenta_mp
         const InsertarCuentaMp = 'INSERT INTO cuenta_mercadopago (user_id, accessToken, refreshToken,publicKey,code,Propietario_id_Propietario) VALUES (?,?, ?, ?, ?, ?)';
-        const valoresCuentaMp = [user_id,accessToken, refreshToken, publicKey, propietarioId,codigoAutorizacion];
+        const valoresCuentaMp = [user_id,accessToken, refreshToken, publicKey,codigoAutorizacion,propietarioId];
   
         connection.query(InsertarCuentaMp, valoresCuentaMp, (err, results) => {
             if (err) {

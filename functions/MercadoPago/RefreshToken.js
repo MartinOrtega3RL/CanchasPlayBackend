@@ -3,36 +3,38 @@ const { connection } = require("../../config")
 
 
 
-function refreshAccessToken(idPropietario){
+async function refreshAccessToken(idPropietario){
+    
 
     const ConsultaRefreshToken = `select refreshToken, code, publicKey from cuenta_mercadopago where Propietario_id_Propietario = ${idPropietario}`
 
-    connection.query(ConsultaRefreshToken,(err,response) => {
-        if(err){
-            console.log(err);
-        }
-        const refreshToken = response[0].refreshToken; // Asumiendo que recuperas el valor correctamente
-        const code = response[0].code; // Recupera el código de autorización
+    return new Promise((resolve, reject) => {
+        connection.query(ConsultaRefreshToken, async (err, response) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
 
+            const refreshToken = response[0].refreshToken; // Asumiendo que recuperas el valor correctamente
+            const code = response[0].code; // Recupera el código de autorización
 
-        const refreshTokenData = {
-            client_secret: process.env.MP_CLIENT_SECRET,
-            client_id: process.env.MP_CLIENT_ID,
-            code: code,
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken,
-        };
+            const refreshTokenData = {
+                client_secret: process.env.MP_CLIENT_SECRET,
+                client_id: process.env.MP_CLIENT_ID,
+                code: code,
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken,
+            };
 
-
-        axios.post('https://api.mercadopago.com/oauth/token', refreshTokenData)
-        .then(response =>{
-            const newAccessToken = response.data.access_token;
-            return newAccessToken;
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    })    
+            try {
+                const axiosResponse = await axios.post('https://api.mercadopago.com/oauth/token', refreshTokenData);
+                const newAccessToken = axiosResponse.data.access_token;
+                resolve(newAccessToken);
+            } catch (axiosError) {
+                reject(axiosError);
+            }
+        });
+    });
 }
 
 

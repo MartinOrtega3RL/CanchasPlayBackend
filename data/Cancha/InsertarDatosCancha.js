@@ -8,17 +8,21 @@ const addDatosCancha = async (req, res) => {
     Dimensiones,
     Especificaciones,
     Deporte,
-    Estado_Cancha,
+    Estado_Cancha = "Disponible",
     Precio_Cancha,
     Imagen_Cancha,
-    idComplejo,
+    idComplejo = 21,
   } = req.body;
+  
   
   const Estado_Hora = "Disponible";
 
   const insertDatosCancha = `INSERT INTO cancha 
-    (Nombre_Cancha,Dimensiones,Especificaciones,Deporte,Estado_Cancha,Precio_Cancha,Imagen_Cancha,Complejo_id_Complejo) 
-    VALUES (?,?,?,?,?,?,?,?)`;
+    (Nombre_Cancha,Dimensiones,Especificaciones,Deporte,Estado_Cancha,Precio_Cancha,Complejo_id_Complejo) 
+    VALUES (?,?,?,?,?,?,?)`;
+
+  const insertarImagenesCancha = `INSERT INTO imagenes_cancha (Nombre_Imagen,Imagen,Cancha_id_Cancha) VALUES (?,?,?)`
+    
 
   try {
     // Insertar la nueva cancha
@@ -31,7 +35,6 @@ const addDatosCancha = async (req, res) => {
         Deporte,
         Estado_Cancha,
         Precio_Cancha,
-        Imagen_Cancha,
         idComplejo,
       ],
       async (error, results) => {
@@ -39,8 +42,30 @@ const addDatosCancha = async (req, res) => {
           res.send("Error al insertar la cancha");
           return;
         }
-
         const canchaId = results.insertId;
+
+        //Query de imagenes//
+        // Insertar las imágenes de la cancha
+
+        if (Imagen_Cancha) {
+          for (let key in Imagen_Cancha) {
+            if (Imagen_Cancha.hasOwnProperty(key)) {
+              const imagenBase64 = Imagen_Cancha[key];
+              const base64Data = imagenBase64.replace(/^data:image\/\w+;base64,/, ""); // Eliminar el prefijo Base64
+              const binaryData = Buffer.from(base64Data, 'base64'); // Convertir a binario
+
+              connection.query(insertarImagenesCancha, [key, binaryData, canchaId], (error, results) => {
+                if (error) {
+                  console.error("Error al insertar imagen:", error);
+                  res.send("Error al insertar imagenes de la cancha");
+                  return;
+                }
+              });
+            }
+          }
+        }
+        ///
+
 
         const selectHorarios = `SELECT * FROM horarios_complejo WHERE Complejo_id_Complejo = ?`;
 
@@ -75,7 +100,7 @@ const addDatosCancha = async (req, res) => {
             }
           }
 
-          res.send("Horas insertadas correctamente");
+          res.send("Cancha Agregada con Exito!");
         });
       }
     );

@@ -2,9 +2,14 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const router = require("./routes/routes");
+const bodyParser = require('body-parser');
 
-app.use(express.json());
+// Aumenta el límite de tamaño de la solicitud
+app.use(bodyParser.json({ limit: '50mb' })); // Puedes ajustar el límite según tus necesidades
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Para solicitudes URL-encoded
+
 app.use(cors());
+app.use(express.json()); // Middleware para parsear JSON después de bodyParser
 app.use(router);
 
 const port = 9090;

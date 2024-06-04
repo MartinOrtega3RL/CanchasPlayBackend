@@ -25,4 +25,19 @@ const obtenerDatosComplejo = (req, res) => {
   });
 };
 
-module.exports = { obtenerDatosComplejo };
+
+const obtenerComplejos = (req,res) => {
+
+  const {idPropietario = 2} = req.body
+
+  const ConsultaComplejo = `select Nombre_Complejo,id_Complejo from complejo where Propietario_id_Propietario = ${idPropietario}`
+
+  connection.query(ConsultaComplejo,(err,response)=> {
+    if(err){
+      console.log(err);
+    }
+    res.send(response.data)
+  })
+}
+
+module.exports = { obtenerDatosComplejo,obtenerComplejos};

@@ -1,22 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { AñadirDatos } = require("../data/Complejo/AñadirDatosComplejo");
-const {
-  ModificarDatos,
-  ModificarHorarioComplejo,
-} = require("../data/Complejo/ModifcarDatosComplejo");
+const {ModificarDatos,ModificarHorarioComplejo} = require("../data/Complejo/ModifcarDatosComplejo");
 const { EliminarComplejo } = require("../data/Complejo/EliminarComplejo");
-const {
-  addDatosCancha,
-  testAddHorarios,
-} = require("../data/Cancha/InsertarDatosCancha");
-const {
-  obtenerDatosComplejo,
-} = require("../data/Complejo/ObtenerDatosComplejo");
-const { ObtenerDatosCancha } = require("../data/Cancha/ObtenerDatosCancha");
-const {
-  ObtenerHorariosCancha,
-} = require("../data/Cancha/ObtenerHorariosCancha");
+const {addDatosCancha,testAddHorarios,} = require("../data/Cancha/InsertarDatosCancha");
+const {obtenerDatosComplejo, obtenerComplejos} = require("../data/Complejo/ObtenerDatosComplejo");
+const { ObtenerDatosCancha, ObtenerImagenesCancha } = require("../data/Cancha/ObtenerDatosCancha");
+const { ObtenerHorariosCancha,} = require("../data/Cancha/ObtenerHorariosCancha");
 const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
 const { crearAcessToken } = require("../Api/MercadoPago/InsertarCuentaMp");
 const { crearPreferencia } = require("../Api/MercadoPago/CrearPreferencia");
@@ -33,9 +23,11 @@ router.post("/ModDatosComplejo", ModificarDatos);
 router.post("/ModHorariosComplejo", ModificarHorarioComplejo);
 router.delete("/EliminarComplejo", EliminarComplejo);
 router.get("/ObtenerDatosComplejo", obtenerDatosComplejo);
+router.post("/ObtenerComplejo",obtenerComplejos);
 //Cancha
 router.post("/AddDatosCancha", addDatosCancha);
 router.post("/ObtenerDatosCancha", ObtenerDatosCancha);
+router.post("/ObtenerImagenesCancha",ObtenerImagenesCancha)
 router.post("/ObtenerHorariosCancha", ObtenerHorariosCancha);
 router.get("/testAddHorarios", testAddHorarios);
 //Reserva

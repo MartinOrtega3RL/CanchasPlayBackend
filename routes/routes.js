@@ -18,6 +18,14 @@ const {
   ObtenerHorariosCancha,
 } = require("../data/Cancha/ObtenerHorariosCancha");
 const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
+const { crearAcessToken } = require("../Api/MercadoPago/InsertarCuentaMp");
+const { crearPreferencia } = require("../Api/MercadoPago/CrearPreferencia");
+const { obtenerPubicKey } = require("../Api/MercadoPago/ObtenerPublicKey");
+
+//MercadoPago//
+router.get("/createAccessToken",crearAcessToken);
+router.post("/createPreference",crearPreferencia);
+router.post("/ObtenerPublicKey",obtenerPubicKey);
 
 //Complejo
 router.post("/AddDatosComplejo", AñadirDatos);

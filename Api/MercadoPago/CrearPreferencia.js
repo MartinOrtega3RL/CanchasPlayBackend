@@ -1,82 +1,88 @@
 const { connection } = require("../../config");
-const mercadopago = require("mercadopago");
+const { MercadoPagoConfig, Payment } = require('mercadopago');
 const { refreshAccessToken } = require("../../functions/MercadoPago/RefreshToken");
 require('dotenv').config();
 
+const crearPreferencia = async (req, res) => {
+    // Obtener la idPropietario -> buscando por idComplejo, a que prop esta asociado?
+    const idPropietario = 2;
+    const AccessToken = refreshAccessToken(idPropietario); // Asegúrate de que refreshAccessToken sea una función asincrónica y devuelva una promesa.
 
-
-
-const crearPreferencia = (req,res) =>{
-    //Obtener la idPropietario -> buscando por idComplejo, a que prop esta asociado?
-    const idPropietario = 1;
-    // const {idHorario,idCancha,Hora,Fecha,price,email} = req.body
-    const {Descripcion,Precio,Cantidad,Nombre,Apellido,Email,Num_Telefono,Dni} = req.body
-
-    const AccessToken = refreshAccessToken(idPropietario);
+    const { Descripcion, Precio, Cantidad, Nombre, Apellido, Email, Num_Telefono, Dni } = req.body;
 
     try {
-        mercadopago.configure({access_token: AccessToken});
+        // Step 2: Initialize the client object
+        const client = new MercadoPagoConfig({ accessToken: AccessToken, options: { timeout: 5000 } });
 
-        let preference = {
-              items: [
+        // Step 3: Initialize the API object
+        const payment = new Payment(client);
+
+        // Step 4: Create the request object
+        const body = {
+            items: [
                 {
-                  title: req.body.Descripcion,
-                  unit_price: Number(req.body.Precio),
-                  quantity: Number(req.body.Cantidad),
-                  
+                    title: Descripcion,
+                    unit_price: Number(Precio),
+                    quantity: Number(Cantidad),
                 },
-              ],
-              ppayer: {
-                name: req.body.Nombre,
-                surname: req.body.Apellido,
-                email: req.body.Email,
+            ],
+            payer: {
+                name: Nombre,
+                surname: Apellido,
+                email: Email,
                 phone: {
                     area_code: "3704",
-                    number: req.body.Num_Telefono
+                    number: Num_Telefono
                 },
                 identification: {
                     type: "DNI",
-                    number: req.body.Dni
+                    number: Dni
                 },
-          
-              },
-              back_urls: {
-                success: `${process.env.MP_BACK_URLS}`,
-                failure: `${process.env.MP_BACK_URLS}`,
+            },
+            back_urls: {
+                success: process.env.MP_BACK_URLS,
+                failure: process.env.MP_BACK_URLS,
                 pending: "",
-              },
-              binary_mode: true,
-              auto_return: "approved",
-              notification_url: `${process.env.MP_REDIRECT_URI}`,
-              metadata: {},
-              payment_methods: {
-                excluded_payment_types: [
-                  {
-                    id: "ticket"
-                  }
-                ],
+            },
+            binary_mode: true,
+            auto_return: "approved",
+            notification_url: process.env.MP_REDIRECT_URI,
+            metadata: {},
+            payment_methods: {
+              excluded_payment_methods: [],
+              excluded_payment_types: [
+                        {
+                                  id: "ticket"
+                        },
+                        {
+                                  id: "credit_card"
+                        }
+              ],
                 installments: 3
-              }
-            };
-            
-            mercadopago.preferences
-              .create(preference)
-              .then(function (response) {
+            }
+        };
+
+        // // Step 5: Create request options object - Optional
+        // const requestOptions = {
+        //     idempotencyKey: '<IDEMPOTENCY_KEY>',
+        // };
+
+        // Step 6: Make the request
+        payment.create({ body})
+            .then(response => {
                 res.json({
-                  id: response.body.id,
+                    id: response.body.id,
                 });
-              })
-              .catch(function (error) {
+            })
+            .catch(error => {
                 console.log(error);
+                res.status(500).send("Ocurrió un error al crear la preferencia.");
             });
+
     } catch (error) {
-        res.send("Ocurrio un error con su solicitud :(")
+        console.log(error);
+        res.status(500).send("Ocurrió un error con su solicitud :(");
     }
+};
 
-
-
-}
-
-
-
-module.exports = {crearPreferencia}
+module.exports = { crearPreferencia };

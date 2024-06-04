@@ -6,7 +6,7 @@ require('dotenv').config();
 
 
 const crearAcessToken = (req, res) => {
-    const propietarioId = 1; //<- aca deberia recibir el idPropietario enviado desde el front
+    const propietarioId = 2; //<- aca deberia recibir el idPropietario enviado desde el front
 
     const url = new URL(req.url, `${process.env.MP_REDIRECT_URI}createAccessToken`); // Reemplaza con tu dominio real
     // Obtén el valor del parámetro 'code' de la URL

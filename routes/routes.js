@@ -11,6 +11,8 @@ const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
 const { crearAcessToken } = require("../Api/MercadoPago/InsertarCuentaMp");
 const { crearPreferencia } = require("../Api/MercadoPago/CrearPreferencia");
 const { obtenerPubicKey } = require("../Api/MercadoPago/ObtenerPublicKey");
+const { obtenerInfoReserva } = require("../data/Reserva/ObtenerInfoReserva");
+const AñadirReserva = require("../data/Reserva/AñadirReserva");
 
 //MercadoPago//
 router.get("/createAccessToken",crearAcessToken);
@@ -31,6 +33,8 @@ router.post("/ObtenerImagenesCancha",ObtenerImagenesCancha)
 router.post("/ObtenerHorariosCancha", ObtenerHorariosCancha);
 router.get("/testAddHorarios", testAddHorarios);
 //Reserva
+router.post("/AddReserva",AñadirReserva);
+router.get("/ObtenerInfoReservas",obtenerInfoReserva);
 
 //Usuario Auth0
 

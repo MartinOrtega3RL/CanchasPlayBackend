@@ -5,12 +5,14 @@ const {ModificarDatos,ModificarHorarioComplejo} = require("../data/Complejo/Modi
 const { EliminarComplejo } = require("../data/Complejo/EliminarComplejo");
 const {addDatosCancha,testAddHorarios,} = require("../data/Cancha/InsertarDatosCancha");
 const {obtenerDatosComplejo, obtenerComplejos} = require("../data/Complejo/ObtenerDatosComplejo");
-const { ObtenerDatosCancha, ObtenerImagenesCancha } = require("../data/Cancha/ObtenerDatosCancha");
+const { ObtenerDatosCancha, ObtenerImagenesCancha, ObtenerMisCanchas } = require("../data/Cancha/ObtenerDatosCancha");
 const { ObtenerHorariosCancha,} = require("../data/Cancha/ObtenerHorariosCancha");
 const { InsertarUsuario } = require("../data/Auth/InsertarDatosUsuario");
 const { crearAcessToken } = require("../Api/MercadoPago/InsertarCuentaMp");
 const { crearPreferencia } = require("../Api/MercadoPago/CrearPreferencia");
 const { obtenerPubicKey } = require("../Api/MercadoPago/ObtenerPublicKey");
+const { obtenerInfoReserva } = require("../data/Reserva/ObtenerInfoReserva");
+const AñadirReserva = require("../data/Reserva/AñadirReserva");
 
 //MercadoPago//
 router.get("/createAccessToken",crearAcessToken);
@@ -29,8 +31,12 @@ router.post("/AddDatosCancha", addDatosCancha);
 router.post("/ObtenerDatosCancha", ObtenerDatosCancha);
 router.post("/ObtenerImagenesCancha",ObtenerImagenesCancha)
 router.post("/ObtenerHorariosCancha", ObtenerHorariosCancha);
+router.post("/ObtenerMisCanchas",ObtenerMisCanchas);
+//
 router.get("/testAddHorarios", testAddHorarios);
 //Reserva
+router.post("/AddReserva",AñadirReserva);
+router.post("/ObtenerInfoReservas",obtenerInfoReserva);
 
 //Usuario Auth0
 

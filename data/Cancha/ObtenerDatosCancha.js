@@ -1,6 +1,8 @@
 const { connection } = require("../../config");
 
+
 const ObtenerDatosCancha = (req, res) => {
+
   const { idComplejo } = req.body;
 
   const DatosCancha = `SELECT 
@@ -14,6 +16,7 @@ const ObtenerDatosCancha = (req, res) => {
 };
 
 const ObtenerImagenesCancha = (req,res) => {
+
   const {idCancha} = req.body;
 
   const ImagenesCancha = `SELECT Nombre_Imagen, Imagen FROM imagenes_cancha where Cancha_id_Cancha = ${idCancha}`
@@ -34,4 +37,22 @@ const ObtenerImagenesCancha = (req,res) => {
 
 }
 
-module.exports = { ObtenerDatosCancha,ObtenerImagenesCancha};
+const ObtenerMisCanchas = (req,res) => {
+
+  const {idPropietario} = req.body;
+
+  const ConsultaMisCanchas = `select Nombre_Cancha, Dimensiones, Especificaciones, Deporte, Precio_Cancha,Nombre_Complejo from cancha ch
+  join complejo cm on ch.Complejo_id_Complejo = cm.id_Complejo
+  where Propietario_id_Propietario = ${idPropietario}`
+
+  connection.query(ConsultaMisCanchas,(err,response) => {
+    if(err){
+      console.log(err);
+      return;
+    }
+    res.send(response);
+  })
+}
+
+
+module.exports = { ObtenerDatosCancha,ObtenerImagenesCancha,ObtenerMisCanchas};

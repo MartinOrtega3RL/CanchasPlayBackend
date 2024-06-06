@@ -1,4 +1,5 @@
 const { connection } = require("../../config");
+const { guardarDetalleReserva } = require("../../functions/Reserva/GuardarDetalleReserva");
 
 const AñadirReserva = (req, res) => {
   const {
@@ -7,6 +8,7 @@ const AñadirReserva = (req, res) => {
     Total_Reservada,
     Estado_Reserva,
     idCancha,
+    idPersona=null,
     idLocatario = null,
     idPropietario = null,
     idPerfil = null,
@@ -59,6 +61,7 @@ const AñadirReserva = (req, res) => {
             }
           }
         );
+        guardarDetalleReserva(idReserva,idPersona)
         res.send("Reserva agregada con Exito");
       }
     );

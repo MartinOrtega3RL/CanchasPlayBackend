@@ -1,0 +1,68 @@
+const { connection } = require("../../config");
+
+const insertarPerfil = (req, res) => {
+    const { Nombre_Perfil, Descripcion_Perfil, Modulos_Permisos_Asignados } = req.body;
+
+    // Insertar el perfil en la tabla perfil
+    const insertarPerfilQuery = "INSERT INTO perfil (Nombre_Perfil, Descripcion_Perfil) VALUES (?, ?)";
+    connection.query(insertarPerfilQuery, [Nombre_Perfil, Descripcion_Perfil], (err, response) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Error al insertar el perfil" });
+        }
+
+        // Obtener el ID del perfil recién insertado
+        const idPerfil = response.insertId;
+
+        // Obtener los mapeos de nombres de módulos y permisos a IDs
+        const moduloIDMap = {};
+        const permisoIDMap = {};
+
+        // Consulta para obtener los mapeos de nombres de módulos a IDs
+        const obtenerModulosQuery = "SELECT id_Modulo, Nombre_Modulo FROM modulos";
+        connection.query(obtenerModulosQuery, (err, resultadosModulos) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ error: "Error al obtener los módulos" });
+            }
+
+            resultadosModulos.forEach(modulo => {
+                moduloIDMap[modulo.Nombre_Modulo] = modulo.id_Modulo;
+            });
+
+            // Consulta para obtener los mapeos de nombres de permisos a IDs
+            const obtenerPermisosQuery = "SELECT id_Permiso, Nombre_Permiso FROM permisos";
+            connection.query(obtenerPermisosQuery, (err, resultadosPermisos) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ error: "Error al obtener los permisos" });
+                }
+
+                resultadosPermisos.forEach(permiso => {
+                    permisoIDMap[permiso.Nombre_Permiso] = permiso.id_Permiso;
+                });
+
+                // Insertar las relaciones en la tabla modulos_has_perfiles
+                for (const modulo in Modulos_Permisos_Asignados) {
+                    const moduloID = moduloIDMap[modulo];
+                    const permisos = Modulos_Permisos_Asignados[modulo];
+                    const permisosIDs = permisos.map(permiso => permisoIDMap[permiso]);
+
+                    permisosIDs.forEach(permisoID => {
+                        const insertarModuloPerfilQuery = "INSERT INTO perfil_has_modulos (Perfil_id_Perfil, Modulos_id_Modulo, Permisos_id_Permiso) VALUES (?, ?, ?)";
+                        connection.query(insertarModuloPerfilQuery, [idPerfil, moduloID, permisoID], (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return res.status(500).json({ error: "Error al insertar los permisos asignados" });
+                            }
+                        });
+                    });
+                }
+
+                return res.status(200).json({ message: "Perfil insertado correctamente" });
+            });
+        });
+    });
+};
+
+module.exports = { insertarPerfil };

@@ -18,7 +18,7 @@ const getAccessToken = async () => {
 };
 
 const InsertarUsuario = async (req, res) => {
-  const {
+  var {
     email,
     password,
     nombre,
@@ -30,21 +30,22 @@ const InsertarUsuario = async (req, res) => {
     Cuit,
   } = req.body;
 
-  const InsertarPersona =
-    "INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?,?,?,?)";
-  const InsertarCuenta =
-    "INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
-  const InsertarLocatario =
-    "INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
-  const InsertarPropietario =
-    "INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
-
+  const InsertarPersona ="INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?,?,?,?)";
+  const InsertarCuenta ="INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
+  const InsertarLocatario ="INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
+  const InsertarPropietario ="INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
+  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil)";
+  
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt);
 
   if (Foto_Perfil) {
     const base64Data = Foto_Perfil.replace(/^data:image\/png;base64,/, "");
     var FotoPerfilBlob = Buffer.from(base64Data, "base64");
+  }
+  if (rol === "Propietario") {
+    // Extraer los 8 dígitos del medio del CUIT
+    dni = Cuit.substring(2, 10);
   }
 
   connection.query(

@@ -6,10 +6,10 @@ const { connection } = require("../../config");
 function guardarDetalleReserva(idReserva,idPersona){
 
 
-    const ConsultaIdPersona = `CALL SP_Obtener_idPersona_Reserva(?);`
+    const sp_ConsultaIdPersona = `CALL SP_Obtener_idPersona_Reserva(?);`
     const InsertarDetallesReserva = "INSERT INTO detalles_reserva (Total_Pago,Estado_Pago,Fecha_Pago,Persona_id_Persona,Reserva_id_Reserva) VALUES (?,?,?,?,?)"
 
-    connection.query(ConsultaIdPersona,[idReserva],(err,response) => {
+    connection.query(sp_ConsultaIdPersona,[idReserva],(err,response) => {
         if(err){
             console.log(err);
             return;

@@ -111,7 +111,19 @@ const addDatosCancha = async (req, res) => {
 
 
 const testAddHorarios = (req, res) => {
-  res.send("Funciona la idea")
+  var {
+    Cuit,
+    Rol,
+    dni = 12,
+    
+  } = req.body;
+
+    if(Rol == "Propietario"){
+
+      dni = Cuit.substring(2, 10);
+    }
+  
+    console.log(dni)
 };
 
 

@@ -13,6 +13,10 @@ const { crearPreferencia } = require("../Api/MercadoPago/CrearPreferencia");
 const { obtenerPubicKey } = require("../Api/MercadoPago/ObtenerPublicKey");
 const { obtenerInfoReserva } = require("../data/Reserva/ObtenerInfoReserva");
 const AñadirReserva = require("../data/Reserva/AñadirReserva");
+const { obtenerDatosUsuario } = require("../data/Auth/ObtenerDatosUsuario");
+const { insertarPerfil } = require("../data/Perfil/InsertarPerfil");
+const { obtenerModulos } = require("../data/Modulos/ObtenerModulos");
+const { obtenerPerfil } = require("../data/Perfil/ObtenerPerfil");
 
 //MercadoPago//
 router.get("/createAccessToken",crearAcessToken);
@@ -33,14 +37,22 @@ router.post("/ObtenerImagenesCancha",ObtenerImagenesCancha)
 router.post("/ObtenerHorariosCancha", ObtenerHorariosCancha);
 router.post("/ObtenerMisCanchas",ObtenerMisCanchas);
 //
-router.get("/testAddHorarios", testAddHorarios);
+router.post("/testAddHorarios", testAddHorarios);
 //Reserva
 router.post("/AddReserva",AñadirReserva);
 router.post("/ObtenerInfoReservas",obtenerInfoReserva);
 
 //Usuario Auth0
-
 router.post("/AddDatosUsuario", InsertarUsuario);
+router.post("/ObtenerCuentaUser",obtenerDatosUsuario);
 //--Horarios
+
+//Perfiles
+router.post("/AddPerfil",insertarPerfil);
+router.post("/ObtenerPerfil",obtenerPerfil);
+
+//Modulos
+router.get("/ObtenerModulos",obtenerModulos);
+
 
 module.exports = router;

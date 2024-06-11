@@ -14,7 +14,7 @@ const AñadirDatos = (req, res) => {
     Ubicacion,
     EstadoComplejo = "Disponible",
     LogoComplejo,
-    idPropietario = 3,
+    idPropietario,
     idPerfil,
   } = req.body;
 

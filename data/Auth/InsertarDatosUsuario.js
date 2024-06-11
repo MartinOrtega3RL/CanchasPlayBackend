@@ -28,14 +28,18 @@ const InsertarUsuario = async (req, res) => {
     rol,
     Foto_Perfil,
     Cuit,
+    cuil,
+    idPropietario
   } = req.body;
+
+  console.log(req.body);
 
   const InsertarPersona ="INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?,?,?,?)";
   const InsertarCuenta ="INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
   const InsertarLocatario ="INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
   const InsertarPropietario ="INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
-  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil)";
-  
+  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil) VALUES (?,?,?)";
+  const RelacionarEmpleadoPropietario = "INSERT INTO propietario_has_empleado (Propietario_id_Propietario,Empleado_id_Empleado) VALUES (?,?)"
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt);
 
@@ -133,19 +137,38 @@ const InsertarUsuario = async (req, res) => {
               );
             }
 
+            if (rol === "Empleado"){
+              connection.query(
+                InsertarEmpleado,
+                [cuil,idCuenta,null],
+                (err,response) => {
+                  if(err){
+                    console.log(err);
+                    return res.status(409).send("Error al insertar Empleado");       
+                  }
+                  const idEmpleado = response.insertId;
+                  connection.query(RelacionarEmpleadoPropietario,[idPropietario,idEmpleado],(err,response) => {
+                    if(err){
+                      console.log(err);
+                      return res.status(409).send("Error al insertar Relacion");       
+                    }
+                  })
+                }
+              )
+            }
+
             res.status(201).send("Usuario creado con éxito");
           }
         );
       } catch (error) {
-        console.log(error);
+        console.log(error.response.data);
         res
           .status(409)
-          .send(error.response ? error.response.data : error.message);
+          .send(error.response.data);
       }
     }
   );
 
-  console.log(req.body.email);
 };
 
 module.exports = { InsertarUsuario };

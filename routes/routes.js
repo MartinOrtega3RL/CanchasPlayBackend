@@ -17,6 +17,7 @@ const { obtenerDatosUsuario } = require("../data/Auth/ObtenerDatosUsuario");
 const { insertarPerfil } = require("../data/Perfil/InsertarPerfil");
 const { obtenerModulos } = require("../data/Modulos/ObtenerModulos");
 const { obtenerPerfil } = require("../data/Perfil/ObtenerPerfil");
+const { obtenerDatosEmpleado } = require("../data/Auth/ObtenerDatosEmpleado");
 
 //MercadoPago//
 router.get("/createAccessToken",crearAcessToken);
@@ -52,7 +53,10 @@ router.post("/AddPerfil",insertarPerfil);
 router.post("/ObtenerPerfil",obtenerPerfil);
 
 //Modulos
-router.get("/ObtenerModulos",obtenerModulos);
+router.get("/ObtenerModulos",obtenerModulos);6
 
+//Empleado
+
+router.post("/ObtenerEmpleados",obtenerDatosEmpleado);
 
 module.exports = router;

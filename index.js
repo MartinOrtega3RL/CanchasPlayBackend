@@ -21,3 +21,16 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`the server is now running on port ${port}`);
 });
+
+
+// Manejo de excepciones no controladas
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1); // Esto hará que nodemon reinicie la aplicación
+});
+
+// Manejo de rechazos de promesas no manejados
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1); // Esto hará que nodemon reinicie la aplicación
+});

@@ -1,11 +1,10 @@
 const { connection } = require("../../config");
 
-const insertarPerfil = (req, res) => {
-    const { Nombre_Perfil, Descripcion_Perfil, Modulos_Permisos_Asignados } = req.body;
-
+const crearPerfil = (req, res) => {
+    const { Nombre_Perfil, Descripcion_Perfil, Modulos_Permisos_Asignados,idPropietario } = req.body;
     // Insertar el perfil en la tabla perfil
-    const insertarPerfilQuery = "INSERT INTO perfil (Nombre_Perfil, Descripcion_Perfil) VALUES (?, ?)";
-    connection.query(insertarPerfilQuery, [Nombre_Perfil, Descripcion_Perfil], (err, response) => {
+    const crearPerfilQuery = "INSERT INTO perfil (Nombre_Perfil, Descripcion_Perfil,propietario_id_Propietario) VALUES (?, ? ,?)";
+    connection.query(crearPerfilQuery, [Nombre_Perfil, Descripcion_Perfil,idPropietario], (err, response) => {
         if (err) {
             console.log(err);
             return res.status(500).json({ error: "Error al insertar el perfil" });
@@ -65,4 +64,19 @@ const insertarPerfil = (req, res) => {
     });
 };
 
-module.exports = { insertarPerfil };
+const insertarPerfil = (req,res) => {
+
+    const {idPerfil,idEmpleado} = req.body;
+
+    const InsertarPerfilQuery = `update empleado set Perfil_id_Perfil = ${idPerfil} where id_Empleado = ${idEmpleado}`
+
+    connection.query(InsertarPerfilQuery,(err,response) => {
+        if(err){
+            console.log(err);
+        }
+        res.send("Insertado con Exito")
+    })
+
+}
+
+module.exports = { crearPerfil,insertarPerfil };

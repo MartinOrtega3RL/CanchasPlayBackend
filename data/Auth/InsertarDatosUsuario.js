@@ -38,8 +38,8 @@ const InsertarUsuario = async (req, res) => {
   const InsertarCuenta ="INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
   const InsertarLocatario ="INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
   const InsertarPropietario ="INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
-  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil) VALUES (?,?,?)";
-  const RelacionarEmpleadoPropietario = "INSERT INTO propietario_has_empleado (Propietario_id_Propietario,Empleado_id_Empleado) VALUES (?,?)"
+  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil,propietario_id_Propietario) VALUES (?,?,?,?)";
+  
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt);
 
@@ -138,21 +138,14 @@ const InsertarUsuario = async (req, res) => {
             }
 
             if (rol === "Empleado"){
-              connection.query(
+              connection.query( 
                 InsertarEmpleado,
-                [cuil,idCuenta,null],
+                [cuil,idCuenta,null,idPropietario],
                 (err,response) => {
                   if(err){
                     console.log(err);
                     return res.status(409).send("Error al insertar Empleado");       
                   }
-                  const idEmpleado = response.insertId;
-                  connection.query(RelacionarEmpleadoPropietario,[idPropietario,idEmpleado],(err,response) => {
-                    if(err){
-                      console.log(err);
-                      return res.status(409).send("Error al insertar Relacion");       
-                    }
-                  })
                 }
               )
             }

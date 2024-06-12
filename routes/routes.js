@@ -14,9 +14,9 @@ const { obtenerPubicKey } = require("../Api/MercadoPago/ObtenerPublicKey");
 const { obtenerInfoReserva } = require("../data/Reserva/ObtenerInfoReserva");
 const AñadirReserva = require("../data/Reserva/AñadirReserva");
 const { obtenerDatosUsuario } = require("../data/Auth/ObtenerDatosUsuario");
-const { insertarPerfil } = require("../data/Perfil/InsertarPerfil");
+const { insertarPerfil, crearPerfil } = require("../data/Perfil/InsertarPerfil");
 const { obtenerModulos } = require("../data/Modulos/ObtenerModulos");
-const { obtenerPerfil } = require("../data/Perfil/ObtenerPerfil");
+const { obtenerPerfil, obtenerMisPerfiles } = require("../data/Perfil/ObtenerPerfil");
 const { obtenerDatosEmpleado } = require("../data/Auth/ObtenerDatosEmpleado");
 
 //MercadoPago//
@@ -49,11 +49,13 @@ router.post("/ObtenerCuentaUser",obtenerDatosUsuario);
 //--Horarios
 
 //Perfiles
-router.post("/AddPerfil",insertarPerfil);
+router.post("/AddPerfil",crearPerfil);
 router.post("/ObtenerPerfil",obtenerPerfil);
+router.post("/ObtenerMisPerfiles",obtenerMisPerfiles);
+router.put("/InsertarPerfil",insertarPerfil);
 
 //Modulos
-router.get("/ObtenerModulos",obtenerModulos);6
+router.get("/ObtenerModulos",obtenerModulos);
 
 //Empleado
 

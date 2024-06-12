@@ -11,7 +11,7 @@ const addDatosCancha = async (req, res) => {
     Estado_Cancha = "Disponible",
     Precio_Cancha,
     Imagen_Cancha,
-    idComplejo = 21,
+    idComplejo,
   } = req.body;
   
   
@@ -23,7 +23,6 @@ const addDatosCancha = async (req, res) => {
 
   const insertarImagenesCancha = `INSERT INTO imagenes_cancha (Nombre_Imagen,Imagen,Cancha_id_Cancha) VALUES (?,?,?)`
     
-
   try {
     // Insertar la nueva cancha
     connection.query(
@@ -91,8 +90,8 @@ const addDatosCancha = async (req, res) => {
                   insertHorariosCancha,
                   [hora, fecha, Estado_Hora, canchaId],
                   (err, result) => {
-                    if (err) {
-                      res.send(err);
+                    if(err){
+                      console.log(err);
                     }
                   }
                 );
@@ -106,6 +105,7 @@ const addDatosCancha = async (req, res) => {
     );
   } catch (err) {
     res.send("Error");
+
   }
 };
 

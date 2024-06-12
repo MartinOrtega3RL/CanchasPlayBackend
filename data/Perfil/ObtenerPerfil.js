@@ -14,5 +14,19 @@ const obtenerPerfil = (req,res) => {
     })
 }
 
+const obtenerMisPerfiles = (req,res) => {
 
-module.exports = {obtenerPerfil}
+    const {idPropietario} = req.body;
+    const ConsultarPerfiles = `select id_Perfil,Nombre_Perfil,Descripcion_Perfil from perfil where propietario_id_Propietario = ${idPropietario}`
+
+    connection.query(ConsultarPerfiles,(err,response) => {
+        if(err){
+            console.log(err);
+        }
+        res.send(response)
+    })
+
+
+}
+
+module.exports = {obtenerPerfil,obtenerMisPerfiles}

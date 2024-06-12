@@ -1,17 +1,23 @@
 const { connection } = require("../../config");
+const moment = require('moment');
 
+const ObtenerHorariosCancha = (req, res) => {
+  const { idCancha } = req.body;
 
-const ObtenerHorariosCancha = (req,res) => {
+  const DatosHorarios = ` SELECT id_Horarios_Canchas, Hora_Cancha, Fecha_Cancha, Estado_Hora
+    FROM horarios_canchas WHERE Cancha_id_Cancha = ${idCancha} AND Estado_Hora = "Disponible"`;
 
-    const {idCancha} = req.body;
-    
-    const DatosHorarios = `SELECT id_Horarios_Canchas,Hora_Cancha,Fecha_Cancha,Estado_Hora 
-    FROM horarios_canchas where Cancha_id_Cancha = ${idCancha}`
+  connection.query(DatosHorarios, (err, response) => {
+    if (err) return res.send(err);
 
-    connection.query(DatosHorarios,(err,response) => {
-        if(err) return res.send(err);
-        res.send(response);
-    })
-}
+    // Formatear las fechas
+    const formattedResponse = response.map(item => ({
+      ...item,
+      Fecha_Cancha: moment(item.Fecha_Cancha).format('YYYY-MM-DD')
+    }));
 
-module.exports = {ObtenerHorariosCancha};
+    res.send(formattedResponse);
+  });
+};
+
+module.exports = { ObtenerHorariosCancha };

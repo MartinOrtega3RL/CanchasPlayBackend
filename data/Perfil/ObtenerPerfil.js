@@ -17,6 +17,7 @@ const obtenerPerfil = (req,res) => {
 const obtenerMisPerfiles = (req,res) => {
 
     const {idPropietario} = req.body;
+    console.log(idPropietario)
     const ConsultarPerfiles = `select id_Perfil,Nombre_Perfil,Descripcion_Perfil from perfil where propietario_id_Propietario = ${idPropietario}`
 
     connection.query(ConsultarPerfiles,(err,response) => {

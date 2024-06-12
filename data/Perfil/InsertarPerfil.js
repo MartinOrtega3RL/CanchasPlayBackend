@@ -67,12 +67,13 @@ const crearPerfil = (req, res) => {
 const insertarPerfil = (req,res) => {
 
     const {idPerfil,idEmpleado} = req.body;
-
+    console.log(req.body)
     const InsertarPerfilQuery = `update empleado set Perfil_id_Perfil = ${idPerfil} where id_Empleado = ${idEmpleado}`
 
     connection.query(InsertarPerfilQuery,(err,response) => {
         if(err){
             console.log(err);
+            return;
         }
         res.send("Insertado con Exito")
     })

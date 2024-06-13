@@ -23,14 +23,3 @@ app.listen(port, () => {
 });
 
 
-// Manejo de excepciones no controladas
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1); // Esto hará que nodemon reinicie la aplicación
-});
-
-// Manejo de rechazos de promesas no manejados
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  process.exit(1); // Esto hará que nodemon reinicie la aplicación
-});

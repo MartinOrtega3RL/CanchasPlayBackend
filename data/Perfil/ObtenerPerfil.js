@@ -17,7 +17,6 @@ const obtenerPerfil = (req,res) => {
 const obtenerMisPerfiles = (req,res) => {
 
     const {idPropietario} = req.body;
-    console.log(idPropietario)
     const ConsultarPerfiles = `select id_Perfil,Nombre_Perfil,Descripcion_Perfil from perfil where propietario_id_Propietario = ${idPropietario}`
 
     connection.query(ConsultarPerfiles,(err,response) => {
@@ -30,4 +29,26 @@ const obtenerMisPerfiles = (req,res) => {
 
 }
 
-module.exports = {obtenerPerfil,obtenerMisPerfiles}
+const obtenerPerfilEmpleado = (req,res) => {
+    
+    const {idEmpleado} = req.body;
+    console.log(req.body)
+    const ConsultaPerfilEmpleado = `select id_Perfil,Nombre_Perfil from empleado em
+    join perfil pr on em.Perfil_id_Perfil = pr.id_Perfil
+    where em.id_Empleado = ${idEmpleado}`
+
+
+    connection.query(ConsultaPerfilEmpleado,(err,response) => {
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(response);
+    })
+
+
+
+
+}
+
+module.exports = {obtenerPerfil,obtenerMisPerfiles,obtenerPerfilEmpleado}

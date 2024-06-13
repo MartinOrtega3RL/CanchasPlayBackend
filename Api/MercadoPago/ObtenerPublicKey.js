@@ -1,7 +1,7 @@
 const { connection } = require("../../config");
 
 
-const obtenerPubicKey = (req,res) => {
+const obtenerPublicKey = (req,res) => {
 
     const {idComplejo} = req.body
 
@@ -26,4 +26,4 @@ const obtenerPubicKey = (req,res) => {
 }
 
 
-module.exports = {obtenerPubicKey};
+module.exports = {obtenerPublicKey};

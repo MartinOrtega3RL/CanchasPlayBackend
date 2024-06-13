@@ -6,7 +6,7 @@ const ObtenerHorariosCancha = (req, res) => {
   const { idComplejo } = req.body;
 
   const DatosHorarios = `
-    SELECT id_Horarios_Canchas, Hora_Cancha, Fecha_Cancha, Estado_Hora, id_Cancha, Nombre_Cancha, Especificaciones
+    SELECT id_Horarios_Canchas, Hora_Cancha, Fecha_Cancha, Estado_Hora, id_Cancha, Nombre_Cancha, Especificaciones,Deporte,Precio_Cancha
     FROM horarios_canchas hc
     JOIN cancha ca ON hc.Cancha_id_Cancha = ca.id_Cancha
     JOIN complejo cm on ca.Complejo_id_Complejo = cm.id_Complejo
@@ -30,6 +30,8 @@ const ObtenerHorariosCancha = (req, res) => {
           key: item.id_Cancha,
           cancha: item.Nombre_Cancha,
           caracteristicas: item.Especificaciones,
+          deporte: item.Deporte,
+          precio: item.Precio_Cancha,
           horarios: []
         };
         acc.push(cancha);

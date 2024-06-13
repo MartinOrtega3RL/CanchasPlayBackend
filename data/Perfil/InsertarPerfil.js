@@ -64,19 +64,22 @@ const crearPerfil = (req, res) => {
     });
 };
 
-const insertarPerfil = (req,res) => {
+const insertarPerfil = (req, res) => {
+    const { idPerfil, idEmpleado } = req.body;
 
-    const {idPerfil,idEmpleado} = req.body;
-    const InsertarPerfilQuery = `update empleado set Perfil_id_Perfil = ${idPerfil} where id_Empleado = ${idEmpleado}`
-
-    connection.query(InsertarPerfilQuery,(err,response) => {
-        if(err){
-            console.log(err);
-            return;
+    // Crear las consultas de inserción
+    const values = idPerfil.map(perfilId => [perfilId, idEmpleado]);
+    const query = 'INSERT INTO perfil_has_empleado (Perfil_id_Perfil, Empleado_id_Empleado) VALUES ?';
+    
+    // Ejecutar la consulta de inserción
+    connection.query(query, [values], (err, result) => {
+        if (err) {
+            console.error('Error al insertar los datos:', err);
+            return res.status(500).send('Error del servidor');
         }
-        res.send("Insertado con Exito")
-    })
 
-}
+        res.send("Insertado con éxito");
+    });
+};
 
 module.exports = { crearPerfil,insertarPerfil };

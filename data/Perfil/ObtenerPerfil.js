@@ -32,10 +32,9 @@ const obtenerMisPerfiles = (req,res) => {
 const obtenerPerfilEmpleado = (req,res) => {
     
     const {idEmpleado} = req.body;
-    console.log(req.body)
-    const ConsultaPerfilEmpleado = `select id_Perfil,Nombre_Perfil from empleado em
-    join perfil pr on em.Perfil_id_Perfil = pr.id_Perfil
-    where em.id_Empleado = ${idEmpleado}`
+    const ConsultaPerfilEmpleado = `select id_Perfil,Nombre_Perfil from perfil pr
+        join perfil_has_empleado pe on pr.id_Perfil = pe.Perfil_id_Perfil
+        where Empleado_id_Empleado = ${idEmpleado} order by Nombre_Perfil `
 
 
     connection.query(ConsultaPerfilEmpleado,(err,response) => {
@@ -45,9 +44,6 @@ const obtenerPerfilEmpleado = (req,res) => {
         }
         res.send(response);
     })
-
-
-
 
 }
 

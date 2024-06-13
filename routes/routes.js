@@ -54,7 +54,7 @@ router.post("/ObtenerCuentaUser",obtenerDatosUsuario);
 router.post("/AddPerfil",crearPerfil);
 router.post("/ObtenerPerfil",obtenerPerfil);
 router.post("/ObtenerMisPerfiles",obtenerMisPerfiles);
-router.put("/InsertarPerfil",insertarPerfil);
+router.post("/InsertarPerfil",insertarPerfil);
 
 //Modulos
 router.get("/ObtenerModulos",obtenerModulos);

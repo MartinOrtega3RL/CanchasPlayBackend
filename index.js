@@ -1,9 +1,25 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const helmet = require("helmet");
 const router = require("./routes/routes");
 const bodyParser = require('body-parser');
 require('./functions/Reserva/ActualizarEstadoReserva');
+
+// Configura Helmet para CSP
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'", // Necesario para algunos scripts de Mercado Pago
+      "https://http2.mlstatic.com", // Permite los scripts de Mercado Pago
+      "https://www.mercadopago.com"
+    ],
+    // Agrega otras directivas según sea necesario
+  },
+  reportOnly: false, // Establecer en true para pruebas
+}));
 
 // Aumenta el límite de tamaño de la solicitud
 app.use(bodyParser.json({ limit: '50mb' })); // Puedes ajustar el límite según tus necesidades
@@ -20,7 +36,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`the server is now running on port ${port}`);
+  console.log(`The server is now running on port ${port}`);
 });
-
-

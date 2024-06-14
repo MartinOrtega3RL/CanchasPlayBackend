@@ -46,23 +46,23 @@ const addDatosCancha = async (req, res) => {
         //Query de imagenes//
         // Insertar las imágenes de la cancha
 
-        if (Imagen_Cancha) {
-          for (let key in Imagen_Cancha) {
-            if (Imagen_Cancha.hasOwnProperty(key)) {
-              const imagenBase64 = Imagen_Cancha[key];
-              const base64Data = imagenBase64.replace(/^data:image\/\w+;base64,/, ""); // Eliminar el prefijo Base64
-              const binaryData = Buffer.from(base64Data, 'base64'); // Convertir a binario
+        // if (Imagen_Cancha) {
+        //   for (let key in Imagen_Cancha) {
+        //     if (Imagen_Cancha.hasOwnProperty(key)) {
+        //       const imagenBase64 = Imagen_Cancha[key];
+        //       const base64Data = imagenBase64.replace(/^data:image\/\w+;base64,/, ""); // Eliminar el prefijo Base64
+        //       const binaryData = Buffer.from(base64Data, 'base64'); // Convertir a binario
 
-              connection.query(insertarImagenesCancha, [key, binaryData, canchaId], (error, results) => {
-                if (error) {
-                  console.error("Error al insertar imagen:", error);
-                  res.send("Error al insertar imagenes de la cancha");
-                  return;
-                }
-              });
-            }
-          }
-        }
+        //       connection.query(insertarImagenesCancha, [key, binaryData, canchaId], (error, results) => {
+        //         if (error) {
+        //           console.error("Error al insertar imagen:", error);
+        //           res.send("Error al insertar imagenes de la cancha");
+        //           return;
+        //         }
+        //       });
+        //     }
+        //   }
+        // }
         ///
 
 

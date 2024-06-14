@@ -38,7 +38,10 @@ const crearAcessToken = (req, res) => {
 
     // Intercambiar el código por tokens llamando a la API de Mercado Pago
     storeTokens(codigoAutorizacion, idPropietario, res)
-        .then(() => res.send("¡Tokens guardados con éxito!"))
+        .then(() => {
+            // Redirigir al usuario a la URL deseada
+            res.redirect(`${process.env.MP_BACK_URLS}DashboardLocatario`);
+        })
         .catch(error => res.status(500).send("Error al guardar los tokens"));
 };
 

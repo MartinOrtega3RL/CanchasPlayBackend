@@ -33,7 +33,7 @@ const AñadirDatos = (req, res) => {
 
   connection.query(
     InsertarComplejo,
-    [Nombre_Complejo, Ubicacion, EstadoComplejo,binaryData || null, idPropietario, idPerfil],
+    [Nombre_Complejo, Ubicacion, EstadoComplejo,null, idPropietario, idPerfil],
     (err, response) => {
       if (err) {
         console.log(err);

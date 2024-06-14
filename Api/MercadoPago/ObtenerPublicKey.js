@@ -19,9 +19,7 @@ const obtenerPublicKey = (req,res) => {
                 if(err){
                     console.log(err);
                 }
-                if(response[0]){
-                    res.send(response[0].publicKey)
-                }
+                res.send(response[0].publicKey)
             })
         })
     } catch (error) {

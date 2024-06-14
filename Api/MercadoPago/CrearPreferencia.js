@@ -11,10 +11,8 @@ const crearPreferencia = async (req, res) => {
     try {
         // Obtener idPropietario
         const idPropietario = await getIdPropietario(idComplejo);
-        
         // Obtener AccessToken
         const AccessToken = await refreshAccessToken(idPropietario);
-
         // Configurar MercadoPago y preferencia
         const client = new MercadoPagoConfig({ accessToken: AccessToken, options: { timeout: 5000 } });
         const preference = new Preference(client);
@@ -41,8 +39,8 @@ const crearPreferencia = async (req, res) => {
                 }
             },
             back_urls: {
-                success: `${process.env.MP_BACK_URLS}dashboardLocatario`,
-                failure: `${process.env.MP_BACK_URLS}dashboardLocatario`,
+                success: `${process.env.MP_BACK_URLS}DashboardLocatario`,
+                failure: `${process.env.MP_BACK_URLS}DashboardLocatario`,
                 pending: ""
             },
             auto_return: "approved",

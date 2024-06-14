@@ -66,8 +66,8 @@ const crearPerfil = (req, res) => {
 
 const insertarPerfil = (req, res) => {
     const { idPerfil, idEmpleado } = req.body;
-
     // Crear las consultas de inserción
+    console.log(idPerfil);
     const values = idPerfil.map(perfilId => [perfilId, idEmpleado]);
     const query = 'INSERT INTO perfil_has_empleado (Perfil_id_Perfil, Empleado_id_Empleado) VALUES ?';
     

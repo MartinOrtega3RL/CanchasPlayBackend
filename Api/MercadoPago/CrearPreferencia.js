@@ -1,23 +1,9 @@
 const { connection } = require("../../config");
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const { refreshAccessToken } = require("../../functions/MercadoPago/RefreshToken");
+const { getIdPropietario } = require("../../functions/ObteneridPropietario");
 require('dotenv').config();
 
-// Función para realizar la consulta a la base de datos y devolver una promesa
-const getIdPropietario = (idComplejo) => {
-    return new Promise((resolve, reject) => {
-        const ConsultaIdPropietario = `SELECT id_Propietario FROM complejo cm
-            JOIN propietario pr ON cm.Propietario_id_Propietario = pr.id_Propietario
-            WHERE id_Complejo = ${idComplejo}`;
-
-        connection.query(ConsultaIdPropietario, (err, response) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(response[0].id_Propietario);
-        });
-    });
-};
 
 const crearPreferencia = async (req, res) => {
     const { Descripcion, Precio, Cantidad, Nombre, Apellido, Email, Num_Telefono, Dni, idComplejo,Hora_Reservada,Fecha_Reservada,idCancha,idLocatario} = req.body;

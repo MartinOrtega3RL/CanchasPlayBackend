@@ -32,13 +32,12 @@ const InsertarUsuario = async (req, res) => {
     idPropietario
   } = req.body;
 
-  console.log(req.body);
 
   const InsertarPersona ="INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?,?,?,?)";
   const InsertarCuenta ="INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
   const InsertarLocatario ="INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
   const InsertarPropietario ="INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
-  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil,propietario_id_Propietario) VALUES (?,?,?,?)";
+  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,propietario_id_Propietario) VALUES (?,?,?)";
   
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt);
@@ -85,7 +84,7 @@ const InsertarUsuario = async (req, res) => {
         method: "post",
         maxBodyLength: Infinity,
         url: `https://${process.env.AUTH0_DOMAIN}/api/v2/users`,
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -95,7 +94,6 @@ const InsertarUsuario = async (req, res) => {
 
       try {
         const auth0Response = await axios.request(config); //Aca obtengo el userid_que me devuelve cuando creo al usuario
-        console.log(JSON.stringify(auth0Response.data));
         const Sub = auth0Response.data.user_id;
 
         connection.query(
@@ -140,7 +138,7 @@ const InsertarUsuario = async (req, res) => {
             if (rol === "Empleado"){
               connection.query( 
                 InsertarEmpleado,
-                [cuil,idCuenta,null,idPropietario],
+                [cuil,idCuenta,idPropietario],
                 (err,response) => {
                   if(err){
                     console.log(err);

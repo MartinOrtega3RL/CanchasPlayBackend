@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const router = require("./routes/routes");
 const bodyParser = require('body-parser');
+require('./functions/Reserva/ActualizarEstadoReserva');
 
 // Aumenta el límite de tamaño de la solicitud
 app.use(bodyParser.json({ limit: '50mb' })); // Puedes ajustar el límite según tus necesidades

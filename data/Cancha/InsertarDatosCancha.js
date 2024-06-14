@@ -105,6 +105,7 @@ const addDatosCancha = async (req, res) => {
     );
   } catch (err) {
     res.send("Error");
+    console.log("InsertCancha" + err)
 
   }
 };

@@ -6,7 +6,7 @@ const AñadirReserva = (req, res) => {
     Hora_Reservada,
     Fecha_Reservada,
     Total_Reservada,
-    Estado_Reserva,
+    Estado_Reserva = "Activa",
     idCancha,
     idPersona=null,
     idLocatario = null,
@@ -14,11 +14,15 @@ const AñadirReserva = (req, res) => {
     idPerfil = null,
   } = req.body;
 
+
   const ConsultaIdComplejo = `select Complejo_id_Complejo from cancha where id_Cancha = ${idCancha}`;
   const InsertarDatosReserva ="INSERT INTO reserva (Hora_Reservada,Fecha_Reservada,Total_Reserva,Estado_Reserva,Complejo_id_Complejo) VALUES (?,?,?,?,?)";
   const InsertarUsuarioResponsable ="UPDATE reserva SET Propietario_id_Propietario = ?, Locatario_id_Locatario = ?, Perfil_id_Perfil = ? where id_Reserva = ?";
   const sp_Cambiar_Estado_Cancha = "CALL SP_Cambiar_Estado_Cancha(?, ?, ?)";
 
+  try {
+    
+  
   connection.query(ConsultaIdComplejo, (err, response) => {
     if (err) {
       console.log(err);
@@ -61,11 +65,14 @@ const AñadirReserva = (req, res) => {
             }
           }
         );
-        guardarDetalleReserva(idReserva,idPersona)
+        guardarDetalleReserva(idReserva,idPersona,Total_Reservada)
         res.send("Reserva agregada con Exito");
       }
     );
   });
+  } catch (error) {
+    console.log("Error" + error);  
+  }
 };
 
 module.exports = AñadirReserva;

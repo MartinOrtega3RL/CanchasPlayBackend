@@ -32,14 +32,12 @@ const InsertarUsuario = async (req, res) => {
     idPropietario
   } = req.body;
 
-  console.log(req.body);
-
   const InsertarPersona ="INSERT INTO persona (Dni,Nombre,Apellido,Num_Telefono) VALUES (?,?,?,?)";
   const InsertarCuenta ="INSERT INTO cuenta (id_Sub,Email,Contraseña,Rol,Foto_Perfil,Persona_id_Persona) VALUES (?,?,?,?,?,?)";
   const InsertarLocatario ="INSERT INTO locatario (Cuenta_id_Cuenta) VALUES (?)";
   const InsertarPropietario ="INSERT INTO propietario (Cuit,Cuenta_id_Cuenta) VALUES (?,?)";
-  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,Perfil_id_Perfil) VALUES (?,?,?)";
-  const RelacionarEmpleadoPropietario = "INSERT INTO propietario_has_empleado (Propietario_id_Propietario,Empleado_id_Empleado) VALUES (?,?)"
+  const InsertarEmpleado = "INSERT INTO empleado (Cuil,Cuenta_id_Cuenta,propietario_id_Propietario) VALUES (?,?,?)";
+  
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt);
 
@@ -47,57 +45,57 @@ const InsertarUsuario = async (req, res) => {
     const base64Data = Foto_Perfil.replace(/^data:image\/png;base64,/, "");
     var FotoPerfilBlob = Buffer.from(base64Data, "base64");
   }
+  
   if (rol === "Propietario") {
     // Extraer los 8 dígitos del medio del CUIT
     dni = Cuit.substring(2, 10);
   }
 
-  connection.query(
-    InsertarPersona,
-    [dni, nombre, apellido, telefono],
-    async (err, response) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send("Error al insertar persona");
-      }
+  try {
+    const accessToken = await getAccessToken(); // Obtener nuevo token de acceso
 
-      const idPersona = response.insertId;
+    let data = JSON.stringify({
+      email: email,
+      user_metadata: {},
+      blocked: false,
+      email_verified: false,
+      app_metadata: {},
+      given_name: nombre,
+      family_name: apellido,
+      name: `${nombre} ${apellido}`,
+      nickname: email,
+      picture: `https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg`,
+      connection: "CanchasDB-Users",
+      password: password,
+      verify_email: true,
+    });
 
-      const accessToken = await getAccessToken(); // Obtener nuevo token de acceso
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `https://${process.env.AUTH0_DOMAIN}/api/v2/users`,
+      headers: { 
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
+    };
 
-      let data = JSON.stringify({
-        email: email,
-        user_metadata: {},
-        blocked: false,
-        email_verified: false,
-        app_metadata: {},
-        given_name: nombre,
-        family_name: apellido,
-        name: `${nombre} ${apellido}`,
-        nickname: email,
-        picture: `https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg`,
-        connection: "CanchasDB-Users",
-        password: password,
-        verify_email: true,
-      });
-
-      let config = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: `https://${process.env.AUTH0_DOMAIN}/api/v2/users`,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: data,
-      };
-
-      try {
-        const auth0Response = await axios.request(config); //Aca obtengo el userid_que me devuelve cuando creo al usuario
-        console.log(JSON.stringify(auth0Response.data));
-        const Sub = auth0Response.data.user_id;
-
+    const auth0Response = await axios.request(config); // Aca obtengo el userid que me devuelve cuando creo al usuario
+    const Sub = auth0Response.data.user_id;
+    
+    connection.query(
+      InsertarPersona,
+      [dni, nombre, apellido, telefono],
+      async (err, response) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send("Error al insertar persona");
+        }
+  
+        const idPersona = response.insertId;
+        
         connection.query(
           InsertarCuenta,
           [Sub, email, hash, rol, FotoPerfilBlob, idPersona],
@@ -129,46 +127,34 @@ const InsertarUsuario = async (req, res) => {
                 (err, response) => {
                   if (err) {
                     console.log(err);
-                    return res
-                      .status(500)
-                      .send("Error al insertar propietario");
+                    return res.status(500).send("Error al insertar propietario");
                   }
                 }
               );
             }
 
-            if (rol === "Empleado"){
-              connection.query(
+            if (rol === "Empleado") {
+              connection.query( 
                 InsertarEmpleado,
-                [cuil,idCuenta,null],
-                (err,response) => {
-                  if(err){
+                [cuil, idCuenta, idPropietario],
+                (err, response) => {
+                  if (err) {
                     console.log(err);
-                    return res.status(409).send("Error al insertar Empleado");       
+                    return res.status(409).send("Error al insertar Empleado");
                   }
-                  const idEmpleado = response.insertId;
-                  connection.query(RelacionarEmpleadoPropietario,[idPropietario,idEmpleado],(err,response) => {
-                    if(err){
-                      console.log(err);
-                      return res.status(409).send("Error al insertar Relacion");       
-                    }
-                  })
                 }
-              )
+              );
             }
 
             res.status(201).send("Usuario creado con éxito");
           }
         );
-      } catch (error) {
-        console.log(error.response.data);
-        res
-          .status(409)
-          .send(error.response.data);
       }
-    }
-  );
-
+    );
+  } catch (error) {
+    console.log(error.response.data);
+    res.status(409).send(error.response.data);
+  }
 };
 
 module.exports = { InsertarUsuario };

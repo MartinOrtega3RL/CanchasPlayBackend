@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const router = require("./routes/routes");
 const bodyParser = require('body-parser');
+require('./functions/Reserva/ActualizarEstadoReserva');
 
 // Aumenta el límite de tamaño de la solicitud
 app.use(bodyParser.json({ limit: '50mb' })); // Puedes ajustar el límite según tus necesidades
@@ -23,14 +24,3 @@ app.listen(port, () => {
 });
 
 
-// Manejo de excepciones no controladas
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1); // Esto hará que nodemon reinicie la aplicación
-});
-
-// Manejo de rechazos de promesas no manejados
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  process.exit(1); // Esto hará que nodemon reinicie la aplicación
-});

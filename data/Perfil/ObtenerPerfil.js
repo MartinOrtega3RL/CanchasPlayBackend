@@ -14,5 +14,37 @@ const obtenerPerfil = (req,res) => {
     })
 }
 
+const obtenerMisPerfiles = (req,res) => {
 
-module.exports = {obtenerPerfil}
+    const {idPropietario} = req.body;
+    const ConsultarPerfiles = `select id_Perfil,Nombre_Perfil,Descripcion_Perfil from perfil where propietario_id_Propietario = ${idPropietario}`
+
+    connection.query(ConsultarPerfiles,(err,response) => {
+        if(err){
+            console.log(err);
+        }
+        res.send(response)
+    })
+
+
+}
+
+const obtenerPerfilEmpleado = (req,res) => {
+    
+    const {idEmpleado} = req.body;
+    const ConsultaPerfilEmpleado = `select id_Perfil,Nombre_Perfil from perfil pr
+        join perfil_has_empleado pe on pr.id_Perfil = pe.Perfil_id_Perfil
+        where Empleado_id_Empleado = ${idEmpleado} order by Nombre_Perfil `
+
+
+    connection.query(ConsultaPerfilEmpleado,(err,response) => {
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(response);
+    })
+
+}
+
+module.exports = {obtenerPerfil,obtenerMisPerfiles,obtenerPerfilEmpleado}

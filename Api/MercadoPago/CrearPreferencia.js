@@ -1,23 +1,28 @@
 const { connection } = require("../../config");
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const { refreshAccessToken } = require("../../functions/MercadoPago/RefreshToken");
+const { getIdPropietario } = require("../../functions/ObteneridPropietario");
 require('dotenv').config();
 
-const crearPreferencia = async (req, res) => {
-    const idPropietario = 2;
-    const AccessToken = await refreshAccessToken(idPropietario); // Asegúrate de que refreshAccessToken sea una función asincrónica y devuelva una promesa.
 
-    const { Descripcion, Precio, Cantidad, Nombre, Apellido, Email, Num_Telefono, Dni } = req.body;
-    
+const crearPreferencia = async (req, res) => {
+    const { Descripcion, Precio, Cantidad, Nombre, Apellido, Email, Num_Telefono, Dni, idComplejo,Hora_Reservada,Fecha_Reservada,idCancha,idLocatario} = req.body;
+
     try {
+        // Obtener idPropietario
+        const idPropietario = await getIdPropietario(idComplejo);
+        
+        // Obtener AccessToken
+        const AccessToken = await refreshAccessToken(idPropietario);
+
+        // Configurar MercadoPago y preferencia
         const client = new MercadoPagoConfig({ accessToken: AccessToken, options: { timeout: 5000 } });
         const preference = new Preference(client);
-
         const body = {
             items: [
                 {
                     title: Descripcion,
-                    unit_price: Number(Precio),
+                    unit_price: Number(Precio),/*  */
                     quantity: Number(Cantidad),
                     currency_id: "ARS"
                 }
@@ -36,12 +41,19 @@ const crearPreferencia = async (req, res) => {
                 }
             },
             back_urls: {
-                success: process.env.MP_BACK_URLS,
-                failure: process.env.MP_BACK_URLS,
+                success: `${process.env.MP_BACK_URLS}dashboardLocatario`,
+                failure: `${process.env.MP_BACK_URLS}dashboardLocatario`,
                 pending: ""
             },
             auto_return: "approved",
-            notification_url: process.env.MP_REDIRECT_URI,
+            notification_url: `${process.env.MP_REDIRECT_URI}NotificacionPago`,
+            metadata: {
+                Hora_Reservada: Hora_Reservada,
+                Fecha_Reservada: Fecha_Reservada,
+                Total_Reservada: Precio,
+                idCancha: idCancha,
+                idLocatario: idLocatario
+            },
             payment_methods: {
                 excluded_payment_methods: [],
                 excluded_payment_types: [
@@ -56,17 +68,8 @@ const crearPreferencia = async (req, res) => {
             }
         };
 
-        preference.create({ body: body})
-            .then(response => {
-                res.json({
-                    id: response.id,
-                });
-            })
-            .catch(error => {
-                console.log(error);
-                res.status(500).send("Ocurrió un error al crear la preferencia.");
-            });
-
+        const response = await preference.create({ body });
+        res.json({ id: response.id });
     } catch (error) {
         console.log(error);
         res.status(500).send("Ocurrió un error con su solicitud :(");

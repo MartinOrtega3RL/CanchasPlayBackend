@@ -5,7 +5,7 @@ require('dotenv').config();
 
 
 
-function storeTokens(codigoAutorizacion, propietarioId) {
+function storeTokens(codigoAutorizacion, idPropietario) {
     return new Promise((resolve, reject) => {
 
     const data = {
@@ -27,7 +27,7 @@ function storeTokens(codigoAutorizacion, propietarioId) {
         
         // Consulta SQL para insertar los datos en la tabla cuenta_mp
         const InsertarCuentaMp = 'INSERT INTO cuenta_mercadopago (user_id, accessToken, refreshToken,publicKey,code,Propietario_id_Propietario) VALUES (?,?, ?, ?, ?, ?)';
-        const valoresCuentaMp = [user_id,accessToken, refreshToken, publicKey,codigoAutorizacion,propietarioId];
+        const valoresCuentaMp = [user_id,accessToken, refreshToken, publicKey,codigoAutorizacion,idPropietario];
   
         connection.query(InsertarCuentaMp, valoresCuentaMp, (err, results) => {
             if (err) {

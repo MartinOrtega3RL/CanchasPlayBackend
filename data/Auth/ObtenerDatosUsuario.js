@@ -20,15 +20,23 @@ const obtenerDatosUsuario = (req, res) => {
                         console.log(err);
                         return res.status(500).send("Error al obtener el id del propietario");
                     }
-                    
+
                     const propietario = response[0] ? response[0].Propietario_id_Propietario : null;
                     if (propietario) {
                         usuario.id_Propietario = propietario;
                     }
 
+                    // Convertir la foto de perfil a una cadena Base64
+                    if (usuario.Foto_Perfil) {
+                        usuario.Foto_Perfil = `data:image/png;base64,${usuario.Foto_Perfil.toString('base64')}`;
+                    }
+
                     res.send(usuario);
                 });
             } else {
+                if (usuario && usuario.Foto_Perfil) {
+                    usuario.Foto_Perfil = `data:image/png;base64,${usuario.Foto_Perfil.toString('base64')}`;
+                }
                 res.send(usuario);
             }
         });
@@ -39,5 +47,3 @@ const obtenerDatosUsuario = (req, res) => {
 };
 
 module.exports = { obtenerDatosUsuario };
-
-
